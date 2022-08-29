@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import {getArgs} from "./helpers/args.js";
-import {printHelp, printSuccess, printError} from "./services/log.service.js";
-import {saveKeyValue, TOKENDICTIONARY} from "./services/storage.service.js";
-import {getWeather} from "./services/api.service.js";
+import {printHelp, printSuccess, printError, printWeather} from "./services/log.service.js";
+import {getKeyValue, saveKeyValue, TOKENDICTIONARY} from "./services/storage.service.js";
+import {getWeather, getIcon} from "./services/api.service.js";
 
 const saveToken = async (token) => {
     if (!token.length) {
@@ -18,10 +18,24 @@ const saveToken = async (token) => {
     }
 }
 
-const getForecast = async (cityName) => {
+const saveCity = async (city) => {
+    if (!city.length) {
+        printError('Город не передан')
+        return;
+    }
     try {
-        const weather = await getWeather(cityName);
-        console.log(weather);
+        await saveKeyValue(TOKENDICTIONARY.city, city);
+        printSuccess('Город сохранён');
+    } catch (e) {
+        printError(e.message);
+    }
+}
+
+const getForecast = async () => {
+    try {
+        const city = process.env.city ?? await getKeyValue(TOKENDICTIONARY.city)
+        const weather = await getWeather(city);
+        printWeather(weather, getIcon(weather.weather[0].icon));
     } catch (e) {
         if (e?.response?.status === 404) {
             printError('Неверно указан город');
@@ -38,18 +52,18 @@ const initCLI = () => {
     const args = getArgs(process.argv);
 
     if (args.h) {
-        printHelp();
+        return printHelp();
     }
 
     if (args.s) {
-        // Save city
+        return saveCity(args.s);
     }
 
     if (args.t) {
         return saveToken(args.t)
     }
 
-    getForecast('kaz1ana');
+    return getForecast();
 }
 
 initCLI();

@@ -19,3 +19,13 @@ export const printHelp = () => {
         `)
     );
 }
+
+export const printWeather = (data, icon) => {
+    console.log(
+        dedent(`${chalk.bgYellow('WEATHER')} Погода в горде: ${data.name}
+        ${icon} ${data.weather[0].description}
+        Температура: ${data.main.temp} (ощущается как ${data.main.feels_like})
+        Влажность: ${data.main.humidity} %
+        `)
+    );
+}
