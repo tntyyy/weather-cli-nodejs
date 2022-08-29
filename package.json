@@ -2,9 +2,9 @@
   "name": "weather-cli",
   "version": "1.0.0",
   "description": "CLI for getting weather",
-  "main": "weather.js",
+  "main": "src/weather.js",
   "bin": {
-    "weather": "./weather.js"
+    "weather": "src/weather.js"
   },
   "type": "module",
   "scripts": {

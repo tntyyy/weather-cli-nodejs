@@ -1,4 +1,4 @@
-import {getKeyValue, TOKENDICTIONARY} from "./storage.service.js";
+import {getKeyValue, TOKENDICTIONARY} from "../storage/storage.service.js";
 import axios from "axios";
 
 export const getIcon = (icon) => {
